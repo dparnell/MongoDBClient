@@ -8,6 +8,11 @@
 
 #import <Foundation/Foundation.h>
 
-@interface MongoDBClient : NSObject
+@interface MongoDBClient : NSObject {
+    
+}
+
++ (MongoDBClient*) newWithHost:(NSString*)host port:(NSUInteger)port andError:(NSError**)error;
+- (id) initWithHost:(NSString*)host port:(NSUInteger)port andError:(NSError**)error;
 
 @end

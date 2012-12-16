@@ -7,6 +7,7 @@
 //
 
 #import "MongoDBClientTests.h"
+#import "MongoDBClient.h"
 
 @implementation MongoDBClientTests
 
@@ -24,9 +25,11 @@
     [super tearDown];
 }
 
-- (void)testExample
+- (void)testConnection
 {
-    STFail(@"Unit tests are not implemented yet in MongoDBClientTests");
+    NSError* error = nil;
+    MongoDBClient* client = [MongoDBClient newWithHost: @"ubuntudev.local" port: 27017 andError: &error];
+    STAssertNotNil(client, @"Connection failed: %@", error);
 }
 
 @end

@@ -15,6 +15,16 @@
 		65FC3AAA167D4DC600DC9316 /* MongoDBClient.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 65FC3A8C167D4DC600DC9316 /* MongoDBClient.framework */; };
 		65FC3AB0167D4DC600DC9316 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 65FC3AAE167D4DC600DC9316 /* InfoPlist.strings */; };
 		65FC3AB3167D4DC600DC9316 /* MongoDBClientTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 65FC3AB2167D4DC600DC9316 /* MongoDBClientTests.m */; };
+		65FC3AC4167D512500DC9316 /* bson.c in Sources */ = {isa = PBXBuildFile; fileRef = 65FC3ABD167D512500DC9316 /* bson.c */; };
+		65FC3AC5167D512500DC9316 /* bson.h in Headers */ = {isa = PBXBuildFile; fileRef = 65FC3ABE167D512500DC9316 /* bson.h */; };
+		65FC3AC6167D512500DC9316 /* md5.c in Sources */ = {isa = PBXBuildFile; fileRef = 65FC3ABF167D512500DC9316 /* md5.c */; };
+		65FC3AC7167D512500DC9316 /* md5.h in Headers */ = {isa = PBXBuildFile; fileRef = 65FC3AC0167D512500DC9316 /* md5.h */; };
+		65FC3AC8167D512500DC9316 /* mongo.c in Sources */ = {isa = PBXBuildFile; fileRef = 65FC3AC1167D512500DC9316 /* mongo.c */; };
+		65FC3AC9167D512500DC9316 /* mongo.h in Headers */ = {isa = PBXBuildFile; fileRef = 65FC3AC2167D512500DC9316 /* mongo.h */; };
+		65FC3ACA167D512500DC9316 /* numbers.c in Sources */ = {isa = PBXBuildFile; fileRef = 65FC3AC3167D512500DC9316 /* numbers.c */; };
+		65FC3ACC167D515B00DC9316 /* env_posix.c in Sources */ = {isa = PBXBuildFile; fileRef = 65FC3ACB167D515B00DC9316 /* env_posix.c */; };
+		65FC3ACF167D518E00DC9316 /* encoding.c in Sources */ = {isa = PBXBuildFile; fileRef = 65FC3ACD167D518E00DC9316 /* encoding.c */; };
+		65FC3AD0167D518E00DC9316 /* encoding.h in Headers */ = {isa = PBXBuildFile; fileRef = 65FC3ACE167D518E00DC9316 /* encoding.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -44,6 +54,16 @@
 		65FC3AAF167D4DC600DC9316 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		65FC3AB1167D4DC600DC9316 /* MongoDBClientTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MongoDBClientTests.h; sourceTree = "<group>"; };
 		65FC3AB2167D4DC600DC9316 /* MongoDBClientTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MongoDBClientTests.m; sourceTree = "<group>"; };
+		65FC3ABD167D512500DC9316 /* bson.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = bson.c; path = "mongo-c-driver/src/bson.c"; sourceTree = "<group>"; };
+		65FC3ABE167D512500DC9316 /* bson.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = bson.h; path = "mongo-c-driver/src/bson.h"; sourceTree = "<group>"; };
+		65FC3ABF167D512500DC9316 /* md5.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = md5.c; path = "mongo-c-driver/src/md5.c"; sourceTree = "<group>"; };
+		65FC3AC0167D512500DC9316 /* md5.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = md5.h; path = "mongo-c-driver/src/md5.h"; sourceTree = "<group>"; };
+		65FC3AC1167D512500DC9316 /* mongo.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = mongo.c; path = "mongo-c-driver/src/mongo.c"; sourceTree = "<group>"; };
+		65FC3AC2167D512500DC9316 /* mongo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = mongo.h; path = "mongo-c-driver/src/mongo.h"; sourceTree = "<group>"; };
+		65FC3AC3167D512500DC9316 /* numbers.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = numbers.c; path = "mongo-c-driver/src/numbers.c"; sourceTree = "<group>"; };
+		65FC3ACB167D515B00DC9316 /* env_posix.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = env_posix.c; path = "mongo-c-driver/src/env_posix.c"; sourceTree = "<group>"; };
+		65FC3ACD167D518E00DC9316 /* encoding.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = encoding.c; path = "mongo-c-driver/src/encoding.c"; sourceTree = "<group>"; };
+		65FC3ACE167D518E00DC9316 /* encoding.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = encoding.h; path = "mongo-c-driver/src/encoding.h"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -71,6 +91,7 @@
 		65FC3A80167D4DC600DC9316 = {
 			isa = PBXGroup;
 			children = (
+				65FC3ABC167D4E3E00DC9316 /* MongoDB C Client Source */,
 				65FC3A95167D4DC600DC9316 /* MongoDBClient */,
 				65FC3AAB167D4DC600DC9316 /* MongoDBClientTests */,
 				65FC3A8E167D4DC600DC9316 /* Frameworks */,
@@ -146,6 +167,23 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		65FC3ABC167D4E3E00DC9316 /* MongoDB C Client Source */ = {
+			isa = PBXGroup;
+			children = (
+				65FC3ACD167D518E00DC9316 /* encoding.c */,
+				65FC3ACE167D518E00DC9316 /* encoding.h */,
+				65FC3ACB167D515B00DC9316 /* env_posix.c */,
+				65FC3ABD167D512500DC9316 /* bson.c */,
+				65FC3ABE167D512500DC9316 /* bson.h */,
+				65FC3ABF167D512500DC9316 /* md5.c */,
+				65FC3AC0167D512500DC9316 /* md5.h */,
+				65FC3AC1167D512500DC9316 /* mongo.c */,
+				65FC3AC2167D512500DC9316 /* mongo.h */,
+				65FC3AC3167D512500DC9316 /* numbers.c */,
+			);
+			name = "MongoDB C Client Source";
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -153,6 +191,10 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				65FC3AC5167D512500DC9316 /* bson.h in Headers */,
+				65FC3AC7167D512500DC9316 /* md5.h in Headers */,
+				65FC3AC9167D512500DC9316 /* mongo.h in Headers */,
+				65FC3AD0167D518E00DC9316 /* encoding.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -264,6 +306,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				65FC3A9E167D4DC600DC9316 /* MongoDBClient.m in Sources */,
+				65FC3AC4167D512500DC9316 /* bson.c in Sources */,
+				65FC3AC6167D512500DC9316 /* md5.c in Sources */,
+				65FC3AC8167D512500DC9316 /* mongo.c in Sources */,
+				65FC3ACA167D512500DC9316 /* numbers.c in Sources */,
+				65FC3ACC167D515B00DC9316 /* env_posix.c in Sources */,
+				65FC3ACF167D518E00DC9316 /* encoding.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
