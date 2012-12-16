@@ -8,11 +8,22 @@
 
 #import <Foundation/Foundation.h>
 
+@interface MongoObjectId : NSObject {
+    
+}
+
+@end
+
 @interface MongoDBClient : NSObject {
     
 }
 
 + (MongoDBClient*) newWithHost:(NSString*)host port:(NSUInteger)port andError:(NSError**)error;
 - (id) initWithHost:(NSString*)host port:(NSUInteger)port andError:(NSError**)error;
+
+- (BOOL) insert:(NSDictionary*) object intoCollection:(NSString*)collection withError:(NSError**)error;
+- (NSArray*) find:(id) query inCollection:(NSString*)collection withError:(NSError**)error;
+
+@property (copy) NSString* database;
 
 @end
