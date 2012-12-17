@@ -263,6 +263,21 @@ static void fill_object_from_bson(id object, bson_iterator* it) {
 }
 
 #pragma mark -
+#pragma mark Database commands
+
+- (BOOL) authenticateForDatabase:(NSString*)database withUsername:(NSString*)username password:(NSString*)password andError:(NSError**)error {
+    if(mongo_cmd_authenticate(&conn, [database cStringUsingEncoding: NSUTF8StringEncoding], [username cStringUsingEncoding: NSUTF8StringEncoding], [password cStringUsingEncoding: NSUTF8StringEncoding])) {
+        self.database = database;
+        
+        return YES;
+    }
+    
+    build_error(&conn, error);
+    return NO;
+}
+
+
+#pragma mark -
 #pragma mark Query Stuff
 
 - (NSDictionary*)buildQuery:(id)query {
@@ -371,6 +386,21 @@ static void fill_object_from_bson(id object, bson_iterator* it) {
     
     build_error(&conn, error);
     return NO;    
+}
+
+- (NSUInteger) count:(id)query inCollection:(NSString*)collection withError:(NSError**)error {
+    bson mongo_query;
+    NSDictionary* to_count = [self buildQuery: query];
+    
+    bsonFromDictionary(&mongo_query, to_count);
+    
+    int result = mongo_count(&conn, [self.database cStringUsingEncoding: NSUTF8StringEncoding], [collection cStringUsingEncoding: NSUTF8StringEncoding], &mongo_query);
+    
+    if(result == MONGO_ERROR) {
+        build_error(&conn, error);
+    }
+    
+    return result;
 }
 
 @end
