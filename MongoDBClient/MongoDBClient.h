@@ -23,6 +23,10 @@
 
 - (BOOL) insert:(NSDictionary*) object intoCollection:(NSString*)collection withError:(NSError**)error;
 - (NSArray*) find:(id) query inCollection:(NSString*)collection withError:(NSError**)error;
+- (BOOL) update:(id) query withOperation:(NSDictionary*)operation inCollection:(NSString*)collection andError:(NSError**)error;
+- (BOOL) upsert:(id) query withOperation:(NSDictionary*)operation inCollection:(NSString*)collection andError:(NSError**)error;
+- (BOOL) updateAll:(id) query withOperation:(NSDictionary*)operation inCollection:(NSString*)collection andError:(NSError**)error;
+- (BOOL) remove:(id)query fromCollection:(NSString*)collection withError:(NSError**)error;
 
 @property (copy) NSString* database;
 

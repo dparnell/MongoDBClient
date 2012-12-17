@@ -78,7 +78,9 @@ static void build_error(mongo* conn, NSError** error) {
             default:
                 *error = [NSError errorWithDomain: [NSString stringWithCString: conn->lasterrstr encoding: NSUTF8StringEncoding] code: conn->err userInfo: nil];
         }
-    }    
+    }
+    
+    mongo_clear_errors(conn);
 }
                   
 + (MongoDBClient*) newWithHost:(NSString*)host port:(NSUInteger)port andError:(NSError**)error {
@@ -261,6 +263,21 @@ static void fill_object_from_bson(id object, bson_iterator* it) {
 }
 
 #pragma mark -
+#pragma mark Query Stuff
+
+- (NSDictionary*)buildQuery:(id)query {
+    if(query == nil ) {
+        return [NSDictionary dictionary];
+    } else if([query isKindOfClass: [MongoObjectId class]]) {
+        return [NSDictionary dictionaryWithObject: query forKey: @"_id"];
+    } else if([query isKindOfClass: [NSDictionary class]]) {
+        return query;
+    }
+    
+    @throw [NSException exceptionWithName: @"CRASH" reason: @"Illegal query object type" userInfo: [NSDictionary dictionaryWithObject: query forKey: @"query"]];
+}
+
+#pragma mark -
 #pragma mark Object manipulation
 
 - (BOOL) insert:(NSDictionary*) object intoCollection:(NSString*)collection withError:(NSError**)error {
@@ -278,16 +295,9 @@ static void fill_object_from_bson(id object, bson_iterator* it) {
 }
 
 - (NSArray*) find:(id) query inCollection:(NSString*)collection withError:(NSError**)error {
-    NSDictionary* to_find;
+    NSDictionary* to_find = [self buildQuery: query];
     NSMutableArray* result = [NSMutableArray new];
     
-    if([query isKindOfClass: [MongoObjectId class]]) {
-        to_find = [NSDictionary dictionaryWithObject: query forKey: @"_id"];
-    } else if([query isKindOfClass: [NSDictionary class]]) {
-        to_find = query;
-    } else {
-        @throw [NSException exceptionWithName: @"CRASH" reason: @"Illegal query object type" userInfo: [NSDictionary dictionaryWithObject: query forKey: @"query"]];
-    }
     
     bson mongo_query;
     bsonFromDictionary(&mongo_query, to_find);
@@ -305,12 +315,62 @@ static void fill_object_from_bson(id object, bson_iterator* it) {
     }
     
     if(cursor.err != MONGO_OK) {
-        
+        build_error(&conn, error);
         result = nil;
     }
     bson_destroy(&mongo_query);
     
     return result;
+}
+
+
+- (BOOL) update:(id) query flag:(int)flag withOperation:(NSDictionary*)operation inCollection:(NSString*)collection andError:(NSError**)error {
+    bson mongo_query;
+    bson mongo_op;
+    NSDictionary* to_update = [self buildQuery: query];
+
+    bsonFromDictionary(&mongo_query, to_update);
+    bsonFromDictionary(&mongo_op, operation);
+    
+    int result = mongo_update(&conn, [[NSString stringWithFormat: @"%@.%@", self.database, collection] cStringUsingEncoding: NSUTF8StringEncoding], &mongo_query, &mongo_op, flag, nil);
+    
+    bson_destroy(&mongo_op);
+    bson_destroy(&mongo_query);
+    
+    if(result == MONGO_OK) {
+        return YES;
+    }
+    
+    build_error(&conn, error);
+    return NO;
+}
+
+- (BOOL) update:(id) query withOperation:(NSDictionary*)operation inCollection:(NSString*)collection andError:(NSError**)error {
+    return [self update: query flag: MONGO_UPDATE_BASIC withOperation: operation inCollection: collection andError: error];
+}
+
+- (BOOL) upsert:(id) query withOperation:(NSDictionary*)operation inCollection:(NSString*)collection andError:(NSError**)error {
+    return [self update: query flag: MONGO_UPDATE_UPSERT withOperation: operation inCollection: collection andError: error];
+}
+
+- (BOOL) updateAll:(id) query withOperation:(NSDictionary*)operation inCollection:(NSString*)collection andError:(NSError**)error {
+    return [self update: query flag: MONGO_UPDATE_MULTI withOperation: operation inCollection: collection andError: error];
+}
+
+- (BOOL) remove:(id)query fromCollection:(NSString*)collection withError:(NSError**)error {
+    NSDictionary* to_remove = [self buildQuery: query];
+    bson mongo_query;
+    
+    bsonFromDictionary(&mongo_query, to_remove);
+    int result = mongo_remove(&conn, [[NSString stringWithFormat: @"%@.%@", self.database, collection] cStringUsingEncoding: NSUTF8StringEncoding], &mongo_query, nil);
+    bson_destroy(&mongo_query);
+    
+    if(result == MONGO_OK) {
+        return YES;
+    }
+    
+    build_error(&conn, error);
+    return NO;    
 }
 
 @end
