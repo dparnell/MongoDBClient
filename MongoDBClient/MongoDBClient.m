@@ -10,6 +10,9 @@
 #import "mongo.h"
 #import "bson.h"
 
+#pragma mark -
+#pragma mark Special Mongo objects
+
 @implementation MongoObjectId {
     bson_oid_t value;
 }
@@ -52,6 +55,36 @@
 }
 
 @end
+
+@implementation MongoTimestamp
+@end
+
+@implementation MongoSymbol
+@end
+
+@implementation MongoUndefined
+@end
+
+@implementation MongoRegex {
+    NSString* _pattern;
+    NSString* _options;
+}
+
+@synthesize pattern = _pattern, options = _options;
+
+- (id) initWithPattern:(NSString*)pattern andOptions:(NSString*)options {
+    self = [super init];
+    if(self) {
+        self.pattern = pattern;
+        self.options = options;
+    }
+    return self;
+}
+
+@end
+
+#pragma mark -
+#pragma mark client code
 
 @implementation MongoDBClient {
     mongo conn;
@@ -162,6 +195,15 @@ static void add_object_to_bson(bson* b, NSString* key, id obj) {
         bson_append_null(b, key_name);
     } else if([obj isKindOfClass: [MongoObjectId class]]) {
         bson_append_oid(b, key_name, [obj oid]);
+    } else if([obj isKindOfClass: [MongoTimestamp class]]) {
+        bson_append_timestamp2(b, key_name, [obj timeIntervalSince1970], 0);
+    } else if([obj isKindOfClass: [MongoSymbol class]]) {
+        bson_append_symbol(b, key_name, [obj cStringUsingEncoding: NSUTF8StringEncoding]);
+    } else if([obj isKindOfClass: [MongoUndefined class]]) {
+        bson_append_undefined(b, key_name);
+    } else if([obj isKindOfClass: [MongoRegex class]]) {
+        MongoRegex* regex = obj;
+        bson_append_regex(b, key_name, [[regex pattern] cStringUsingEncoding: NSUTF8StringEncoding], [[regex options] cStringUsingEncoding: NSUTF8StringEncoding]);
     } else if([obj respondsToSelector: @selector(cStringUsingEncoding:)]) {
         bson_append_string(b, key_name, [obj cStringUsingEncoding: NSUTF8StringEncoding]);
     } else {
@@ -184,9 +226,13 @@ static id object_from_bson(bson_iterator* it) {
     id value = nil;
     bson_iterator it2;
     bson subobject;
+    bson_timestamp_t timestamp;
+    const char* pattern;
+    const char* options;
     
     switch(bson_iterator_type(it)) {
         case BSON_EOO:
+            value = [NSError errorWithDomain: @"Unhandled object type: EOO" code: 0 userInfo: nil];
             break;
         case BSON_DOUBLE:
             value = [NSNumber numberWithDouble: bson_iterator_double(it)];
@@ -212,6 +258,7 @@ static id object_from_bson(bson_iterator* it) {
                                    length:bson_iterator_bin_len(it)];
             break;
         case BSON_UNDEFINED:
+            value = [MongoUndefined new];
             break;
         case BSON_OID:
             value = [[MongoObjectId alloc] initWithOid: bson_iterator_oid(it)];
@@ -226,17 +273,28 @@ static id object_from_bson(bson_iterator* it) {
             value = [NSNull null];
             break;
         case BSON_REGEX:
+            pattern = bson_iterator_regex(it);
+            options = bson_iterator_regex_opts(it);
+            
+            value = [[MongoRegex alloc] initWithPattern: [NSString stringWithCString: pattern encoding: NSUTF8StringEncoding]
+                                             andOptions: [NSString stringWithCString: options encoding: NSUTF8StringEncoding]];
             break;
         case BSON_CODE:
+            value = [NSError errorWithDomain: @"Unhandled object type: CODE" code: 0 userInfo: nil];
             break;
         case BSON_SYMBOL:
+            value = [[MongoSymbol alloc] initWithCString: bson_iterator_string(it)
+                                                encoding: NSUTF8StringEncoding];
             break;
         case BSON_CODEWSCOPE:
+            value = [NSError errorWithDomain: @"Unhandled object type: CODEWSCOPE" code: 0 userInfo: nil];
             break;
         case BSON_INT:
             value = [NSNumber numberWithInt: bson_iterator_int(it)];
             break;
         case BSON_TIMESTAMP:
+            timestamp = bson_iterator_timestamp(it);
+            value = [MongoTimestamp dateWithTimeIntervalSince1970: timestamp.t];
             break;
         case BSON_LONG:
             value = [NSNumber numberWithLong: bson_iterator_long(it)];

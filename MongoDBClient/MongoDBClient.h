@@ -8,15 +8,28 @@
 
 #import <Foundation/Foundation.h>
 
-@interface MongoObjectId : NSObject {
-    
-}
+@interface MongoObjectId : NSObject
+@end
+
+@interface MongoTimestamp : NSDate
+@end
+
+@interface MongoSymbol : NSString
+@end
+
+@interface MongoUndefined : NSObject
+@end
+
+@interface MongoRegex : NSObject
+
+- (id) initWithPattern:(NSString*)pattern andOptions:(NSString*)options;
+
+@property (strong) NSString* pattern;
+@property (strong) NSString* options;
 
 @end
 
-@interface MongoDBClient : NSObject {
-    
-}
+@interface MongoDBClient : NSObject
 
 + (MongoDBClient*) newWithHost:(NSString*)host port:(NSUInteger)port andError:(NSError**)error;
 - (id) initWithHost:(NSString*)host port:(NSUInteger)port andError:(NSError**)error;

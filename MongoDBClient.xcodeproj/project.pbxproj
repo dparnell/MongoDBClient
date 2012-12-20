@@ -481,6 +481,7 @@
 				65FC3AB8167D4DC600DC9316 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		65FC3AB9167D4DC600DC9316 /* Build configuration list for PBXNativeTarget "MongoDBClientTests" */ = {
 			isa = XCConfigurationList;
@@ -489,6 +490,7 @@
 				65FC3ABB167D4DC600DC9316 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
