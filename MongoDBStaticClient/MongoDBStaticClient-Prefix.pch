@@ -1,0 +1,7 @@
+//
+// Prefix header for all source files of the 'MongoDBStaticClient' target in the 'MongoDBStaticClient' project
+//
+
+#ifdef __OBJC__
+    #import <Cocoa/Cocoa.h>
+#endif

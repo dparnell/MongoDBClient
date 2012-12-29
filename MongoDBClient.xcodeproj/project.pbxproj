@@ -7,6 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		654CD59A168EB70600AACCD8 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 65FC3A8F167D4DC600DC9316 /* Cocoa.framework */; };
+		654CD5A5168EB74300AACCD8 /* encoding.c in Sources */ = {isa = PBXBuildFile; fileRef = 65FC3ACD167D518E00DC9316 /* encoding.c */; };
+		654CD5A6168EB74600AACCD8 /* env_posix.c in Sources */ = {isa = PBXBuildFile; fileRef = 65FC3ACB167D515B00DC9316 /* env_posix.c */; };
+		654CD5A7168EB74800AACCD8 /* bson.c in Sources */ = {isa = PBXBuildFile; fileRef = 65FC3ABD167D512500DC9316 /* bson.c */; };
+		654CD5A8168EB74A00AACCD8 /* md5.c in Sources */ = {isa = PBXBuildFile; fileRef = 65FC3ABF167D512500DC9316 /* md5.c */; };
+		654CD5A9168EB74D00AACCD8 /* mongo.c in Sources */ = {isa = PBXBuildFile; fileRef = 65FC3AC1167D512500DC9316 /* mongo.c */; };
+		654CD5AA168EB75000AACCD8 /* numbers.c in Sources */ = {isa = PBXBuildFile; fileRef = 65FC3AC3167D512500DC9316 /* numbers.c */; };
+		654CD5AB168EB75400AACCD8 /* MongoDBClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 65FC3A9D167D4DC600DC9316 /* MongoDBClient.m */; };
 		65FC3A90167D4DC600DC9316 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 65FC3A8F167D4DC600DC9316 /* Cocoa.framework */; };
 		65FC3A9A167D4DC600DC9316 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 65FC3A98167D4DC600DC9316 /* InfoPlist.strings */; };
 		65FC3A9E167D4DC600DC9316 /* MongoDBClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 65FC3A9D167D4DC600DC9316 /* MongoDBClient.m */; };
@@ -38,6 +46,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		654CD599168EB70600AACCD8 /* libMongoDBStaticClient.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libMongoDBStaticClient.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		654CD59D168EB70600AACCD8 /* MongoDBStaticClient-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "MongoDBStaticClient-Prefix.pch"; sourceTree = "<group>"; };
 		65FC3A8C167D4DC600DC9316 /* MongoDBClient.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = MongoDBClient.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		65FC3A8F167D4DC600DC9316 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		65FC3A92167D4DC600DC9316 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -67,6 +77,14 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		654CD596168EB70600AACCD8 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				654CD59A168EB70600AACCD8 /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		65FC3A88167D4DC600DC9316 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -88,12 +106,29 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		654CD59B168EB70600AACCD8 /* MongoDBStaticClient */ = {
+			isa = PBXGroup;
+			children = (
+				654CD59C168EB70600AACCD8 /* Supporting Files */,
+			);
+			path = MongoDBStaticClient;
+			sourceTree = "<group>";
+		};
+		654CD59C168EB70600AACCD8 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				654CD59D168EB70600AACCD8 /* MongoDBStaticClient-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
 		65FC3A80167D4DC600DC9316 = {
 			isa = PBXGroup;
 			children = (
 				65FC3ABC167D4E3E00DC9316 /* MongoDB C Client Source */,
 				65FC3A95167D4DC600DC9316 /* MongoDBClient */,
 				65FC3AAB167D4DC600DC9316 /* MongoDBClientTests */,
+				654CD59B168EB70600AACCD8 /* MongoDBStaticClient */,
 				65FC3A8E167D4DC600DC9316 /* Frameworks */,
 				65FC3A8D167D4DC600DC9316 /* Products */,
 			);
@@ -104,6 +139,7 @@
 			children = (
 				65FC3A8C167D4DC600DC9316 /* MongoDBClient.framework */,
 				65FC3AA4167D4DC600DC9316 /* MongoDBClientTests.octest */,
+				654CD599168EB70600AACCD8 /* libMongoDBStaticClient.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -187,6 +223,13 @@
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
+		654CD597168EB70600AACCD8 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		65FC3A89167D4DC600DC9316 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
@@ -201,6 +244,23 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
+		654CD598168EB70600AACCD8 /* MongoDBStaticClient */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 654CD5A3168EB70600AACCD8 /* Build configuration list for PBXNativeTarget "MongoDBStaticClient" */;
+			buildPhases = (
+				654CD595168EB70600AACCD8 /* Sources */,
+				654CD596168EB70600AACCD8 /* Frameworks */,
+				654CD597168EB70600AACCD8 /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = MongoDBStaticClient;
+			productName = MongoDBStaticClient;
+			productReference = 654CD599168EB70600AACCD8 /* libMongoDBStaticClient.a */;
+			productType = "com.apple.product-type.library.static";
+		};
 		65FC3A8B167D4DC600DC9316 /* MongoDBClient */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 65FC3AB6167D4DC600DC9316 /* Build configuration list for PBXNativeTarget "MongoDBClient" */;
@@ -261,6 +321,7 @@
 			targets = (
 				65FC3A8B167D4DC600DC9316 /* MongoDBClient */,
 				65FC3AA3167D4DC600DC9316 /* MongoDBClientTests */,
+				654CD598168EB70600AACCD8 /* MongoDBStaticClient */,
 			);
 		};
 /* End PBXProject section */
@@ -301,6 +362,20 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		654CD595168EB70600AACCD8 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				654CD5AB168EB75400AACCD8 /* MongoDBClient.m in Sources */,
+				654CD5A5168EB74300AACCD8 /* encoding.c in Sources */,
+				654CD5A6168EB74600AACCD8 /* env_posix.c in Sources */,
+				654CD5A7168EB74800AACCD8 /* bson.c in Sources */,
+				654CD5A8168EB74A00AACCD8 /* md5.c in Sources */,
+				654CD5A9168EB74D00AACCD8 /* mongo.c in Sources */,
+				654CD5AA168EB75000AACCD8 /* numbers.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		65FC3A87167D4DC600DC9316 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -353,6 +428,24 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		654CD5A1168EB70600AACCD8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "MongoDBStaticClient/MongoDBStaticClient-Prefix.pch";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		654CD5A2168EB70600AACCD8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "MongoDBStaticClient/MongoDBStaticClient-Prefix.pch";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 		65FC3AB4167D4DC600DC9316 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -465,6 +558,14 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		654CD5A3168EB70600AACCD8 /* Build configuration list for PBXNativeTarget "MongoDBStaticClient" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				654CD5A1168EB70600AACCD8 /* Debug */,
+				654CD5A2168EB70600AACCD8 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
 		65FC3A85167D4DC600DC9316 /* Build configuration list for PBXProject "MongoDBClient" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
