@@ -368,14 +368,29 @@ static void fill_object_from_bson(id object, bson_iterator* it) {
 }
 
 - (NSArray*) find:(id) query inCollection:(NSString*)collection withError:(NSError**)error {
+    return [self find: query columns: nil skip: 0 returningNoMoreThan: 0 fromCollection: collection withError: error];
+}
+
+- (NSArray*) find:(id) query columns: (NSDictionary*) columns skip:(int)toSkip returningNoMoreThan:(int)limit fromCollection:(NSString*)collection withError:(NSError**)error {
     NSDictionary* to_find = [self buildQuery: query];
     NSMutableArray* result = [NSMutableArray new];
     
     
     bson mongo_query;
+    bson mongo_columns;
     bsonFromDictionary(&mongo_query, to_find);
     mongo_cursor cursor;
     mongo_cursor_init(&cursor, &conn, [[NSString stringWithFormat: @"%@.%@", self.database, collection] cStringUsingEncoding: NSUTF8StringEncoding]);
+    if(columns) {
+        bsonFromDictionary(&mongo_columns, columns);
+        mongo_cursor_set_fields(&cursor, &mongo_columns);
+    }
+    if(toSkip>0) {
+        mongo_cursor_set_skip(&cursor, toSkip);
+    }
+    if(limit>0) {
+        mongo_cursor_set_limit(&cursor, limit);
+    }
     mongo_cursor_set_query(&cursor, &mongo_query);
     
     while( mongo_cursor_next( &cursor ) == MONGO_OK ) {
@@ -392,6 +407,9 @@ static void fill_object_from_bson(id object, bson_iterator* it) {
         result = nil;
     }
     bson_destroy(&mongo_query);
+    if(columns) {
+        bson_destroy(&mongo_columns);
+    }
     
     return result;
 }

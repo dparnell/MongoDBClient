@@ -38,6 +38,7 @@
 
 - (BOOL) insert:(NSDictionary*) object intoCollection:(NSString*)collection withError:(NSError**)error;
 - (NSArray*) find:(id) query inCollection:(NSString*)collection withError:(NSError**)error;
+- (NSArray*) find:(id) query columns: (NSDictionary*) columns skip:(int)toSkip returningNoMoreThan:(int)limit fromCollection:(NSString*)collection withError:(NSError**)error;
 - (BOOL) update:(id) query withOperation:(NSDictionary*)operation inCollection:(NSString*)collection andError:(NSError**)error;
 - (BOOL) upsert:(id) query withOperation:(NSDictionary*)operation inCollection:(NSString*)collection andError:(NSError**)error;
 - (BOOL) updateAll:(id) query withOperation:(NSDictionary*)operation inCollection:(NSString*)collection andError:(NSError**)error;
