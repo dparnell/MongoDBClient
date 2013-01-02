@@ -17,6 +17,15 @@
     bson_oid_t value;
 }
 
++ (MongoObjectId*)newWithString:(NSString*)string {
+    const char* chars = [string UTF8String];
+    bson_oid_t oid;
+    
+    bson_oid_from_string(&oid, chars);
+    
+    return [[MongoObjectId alloc] initWithOid: &oid];
+}
+
 - (id) init {
     self = [super init];
     if(self) {
@@ -37,7 +46,7 @@
     char buffer[25];
     bson_oid_to_string(&value, buffer);
     
-    return [NSString stringWithCString: buffer encoding: NSUTF8StringEncoding];
+    return [NSString stringWithFormat: @"ObjectId('%s')", buffer];
 }
 
 - (bson_oid_t*) oid {

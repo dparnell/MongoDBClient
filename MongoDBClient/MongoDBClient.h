@@ -9,6 +9,9 @@
 #import <Foundation/Foundation.h>
 
 @interface MongoObjectId : NSObject
+
++ (MongoObjectId*)newWithString:(NSString*)string;
+
 @end
 
 @interface MongoTimestamp : NSDate
