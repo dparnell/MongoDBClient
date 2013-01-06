@@ -102,6 +102,15 @@
 @end
 
 #pragma mark -
+#pragma mark MongoDBClient private interface
+
+@interface MongoDBClient(Private)
+
+- (mongo*) mongoConnection;
+
+@end
+
+#pragma mark -
 #pragma mark BSON stuff
 
 static void add_object_to_bson(bson* b, NSString* key, id obj) {
@@ -295,7 +304,9 @@ static void fill_object_from_bson(id object, bson_iterator* it) {
 #pragma mark -
 #pragma mark Initialization and destruction
 
-static void build_error(mongo* conn, NSError** error) {
+static void build_error(MongoDBClient* client, NSError** error) {
+    mongo* conn = [client mongoConnection];
+
     if(error) {
         switch ( conn->err ) {
             case MONGO_CONN_NO_SOCKET:
@@ -311,6 +322,7 @@ static void build_error(mongo* conn, NSError** error) {
                 *error = [NSError errorWithDomain: @"Database is not a master" code: conn->err userInfo: nil];
                 break;
             default:
+                mongo_cmd_get_last_error(conn, [client.database UTF8String], nil);
                 *error = [NSError errorWithDomain: [NSString stringWithCString: conn->lasterrstr encoding: NSUTF8StringEncoding] code: conn->err userInfo: nil];
         }
     }
@@ -331,7 +343,7 @@ static void build_error(mongo* conn, NSError** error) {
         
         status = mongo_client(&conn, [host cStringUsingEncoding: NSUTF8StringEncoding], (int)port);
         if(status != MONGO_OK) {
-            build_error(&conn, error);
+            build_error(self, error);
             
             return nil;
         }
@@ -372,7 +384,7 @@ static void build_error(mongo* conn, NSError** error) {
         return YES;
     }
     
-    build_error(&conn, error);
+    build_error(self, error);
     return NO;
 }
 
@@ -389,7 +401,7 @@ static void build_error(mongo* conn, NSError** error) {
         return YES;
     }
     
-    build_error(&conn, error);
+    build_error(self, error);
     return NO;
 }
 
@@ -411,6 +423,8 @@ static void build_error(mongo* conn, NSError** error) {
                 break;
             }
         }
+        
+        return result;
     }
     
     return nil;
@@ -434,7 +448,7 @@ static void build_error(mongo* conn, NSError** error) {
         return YES;
     }
     
-    build_error(&conn, error);
+    build_error(self, error);
     return NO;
 }
 
@@ -462,7 +476,7 @@ static void build_error(mongo* conn, NSError** error) {
         return YES;
     }
     
-    build_error(&conn, error);
+    build_error(self, error);
     return NO;    
 }
 
@@ -475,7 +489,7 @@ static void build_error(mongo* conn, NSError** error) {
     int result = mongo_count(&conn, [self.database cStringUsingEncoding: NSUTF8StringEncoding], [collection cStringUsingEncoding: NSUTF8StringEncoding], &mongo_query);
     
     if(result == MONGO_ERROR) {
-        build_error(&conn, error);
+        build_error(self, error);
     }
     
     return result;
@@ -503,8 +517,9 @@ static void build_error(mongo* conn, NSError** error) {
     bson mongo_query;
     BOOL had_columns;
     bson mongo_columns;
-    mongo_cursor cursor;
     mongo* conn;
+    MongoDBClient* mongo_client;
+    mongo_cursor cursor;
 }
 
 - (id) initWithClient:(MongoDBClient*)client query:(id) query columns: (NSDictionary*) columns skip:(NSInteger)toSkip returningNoMoreThan:(NSInteger)limit fromCollection:(NSString*)collection withError:(NSError**)error {
@@ -513,15 +528,18 @@ static void build_error(mongo* conn, NSError** error) {
     
     if(self) {
         NSDictionary* to_find = [MongoDBClient buildQuery: query];
+        mongo_client = client;
         conn = [client mongoConnection];
         bsonFromDictionary(&mongo_query, to_find);
         mongo_cursor_init(&cursor, conn, [[NSString stringWithFormat: @"%@.%@", client.database, collection] cStringUsingEncoding: NSUTF8StringEncoding]);
+
         if(columns) {
             bsonFromDictionary(&mongo_columns, columns);
             mongo_cursor_set_fields(&cursor, &mongo_columns);
             had_columns = YES;
         } else {
             had_columns = NO;
+            mongo_cursor_set_fields(&cursor, nil);
         }
         if(toSkip>0) {
             mongo_cursor_set_skip(&cursor, (int)toSkip);
@@ -541,6 +559,7 @@ static void build_error(mongo* conn, NSError** error) {
     if(had_columns) {
         bson_destroy(&mongo_columns);
     }
+    mongo_cursor_destroy(&cursor);
 }
 
 - (BOOL) nextDocumentIntoDictionary:(NSMutableDictionary*)doc withKeys:(NSMutableArray*)keys andError:(NSError**)error {
@@ -556,7 +575,7 @@ static void build_error(mongo* conn, NSError** error) {
         return YES;
     }
     
-    build_error(conn, error);
+    build_error(mongo_client, error);
     return NO;
 }
 

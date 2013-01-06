@@ -9,7 +9,8 @@
 #import "MongoDBClientTests.h"
 #import "MongoDBClient.h"
 
-#define HOST @"ubuntudev.local"
+#define HOST @"localhost"
+#define PORT 3002
 
 @implementation MongoDBClientTests
 
@@ -30,13 +31,13 @@
 - (void)testConnection
 {
     NSError* error = nil;
-    MongoDBClient* client = [MongoDBClient newWithHost: HOST port: 27017 andError: &error];
+    MongoDBClient* client = [MongoDBClient newWithHost: HOST port: PORT andError: &error];
     STAssertNotNil(client, @"Connection failed: %@", error);
 }
 
 - (void)testInsert {
     NSError* error = nil;
-    MongoDBClient* client = [MongoDBClient newWithHost: HOST port: 27017 andError: &error];
+    MongoDBClient* client = [MongoDBClient newWithHost: HOST port: PORT andError: &error];
     STAssertNotNil(client, @"Connection failed: %@", error);
     
     BOOL result = [client insert: [NSDictionary dictionaryWithObjectsAndKeys:
@@ -51,7 +52,7 @@
 
 - (void)testFind {
     NSError* error = nil;
-    MongoDBClient* client = [MongoDBClient newWithHost: HOST port: 27017 andError: &error];
+    MongoDBClient* client = [MongoDBClient newWithHost: HOST port: PORT andError: &error];
     STAssertNotNil(client, @"Connection failed: %@", error);
     
     MongoObjectId* object_id = [MongoObjectId new];
@@ -78,7 +79,7 @@
 
 - (void) testUpdate {
     NSError* error = nil;
-    MongoDBClient* client = [MongoDBClient newWithHost: HOST port: 27017 andError: &error];
+    MongoDBClient* client = [MongoDBClient newWithHost: HOST port: PORT andError: &error];
     STAssertNotNil(client, @"Connection failed: %@", error);
     
     MongoObjectId* object_id = [MongoObjectId new];
@@ -114,7 +115,7 @@
 
 - (void) testDelete {
     NSError* error = nil;
-    MongoDBClient* client = [MongoDBClient newWithHost: HOST port: 27017 andError: &error];
+    MongoDBClient* client = [MongoDBClient newWithHost: HOST port: PORT andError: &error];
     STAssertNotNil(client, @"Connection failed: %@", error);
         
     BOOL result = [client insert: [NSDictionary dictionaryWithObjectsAndKeys:
