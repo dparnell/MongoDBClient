@@ -93,65 +93,13 @@
 @end
 
 #pragma mark -
-#pragma mark client code
+#pragma mark MongoDBCursor private interface
 
-@implementation MongoDBClient {
-    mongo conn;
-}
+@interface MongoDbCursor(Private)
 
-#pragma mark -
-#pragma mark Initialization and destruction
+- (id) initWithClient:(MongoDBClient*)client query:(id) query columns: (NSDictionary*) columns skip:(NSInteger)toSkip returningNoMoreThan:(NSInteger)limit fromCollection:(NSString*)collection withError:(NSError**)error;
 
-static void build_error(mongo* conn, NSError** error) {
-    if(error) {
-        switch ( conn->err ) {
-            case MONGO_CONN_NO_SOCKET:
-                *error = [NSError errorWithDomain: @"No socket" code: conn->err userInfo: nil];
-                break;
-            case MONGO_CONN_FAIL:
-                *error = [NSError errorWithDomain: @"Connection failed" code: conn->err userInfo: nil];
-                break;
-            case MONGO_CONN_ADDR_FAIL:
-                *error = [NSError errorWithDomain: @"Could not resolve host name" code: conn->err userInfo: nil];
-                break;
-            case MONGO_CONN_NOT_MASTER:
-                *error = [NSError errorWithDomain: @"Database is not a master" code: conn->err userInfo: nil];
-                break;
-            default:
-                *error = [NSError errorWithDomain: [NSString stringWithCString: conn->lasterrstr encoding: NSUTF8StringEncoding] code: conn->err userInfo: nil];
-        }
-    }
-    
-    mongo_clear_errors(conn);
-}
-                  
-+ (MongoDBClient*) newWithHost:(NSString*)host port:(NSUInteger)port andError:(NSError**)error {
-    return [[MongoDBClient alloc] initWithHost: host port: port andError: error];
-}
-
-- (id) initWithHost:(NSString*)host port:(NSUInteger)port andError:(NSError**)error {
-    self = [super init];
-    if(self) {
-        int status;
-        
-        mongo_init(&conn);
-        
-        status = mongo_client(&conn, [host cStringUsingEncoding: NSUTF8StringEncoding], (int)port);
-        if(status != MONGO_OK) {
-            build_error(&conn, error);
-            
-            return nil;
-        }
-        
-        self.database = @"test";
-    }
-    return self;
-}
-
-- (void)dealloc
-{
-    mongo_destroy(&conn);
-}
+@end
 
 #pragma mark -
 #pragma mark BSON stuff
@@ -309,16 +257,20 @@ static id object_from_bson(bson_iterator* it) {
             value = [NSNumber numberWithLong: bson_iterator_long(it)];
             break;
         default:
-        break;
+            break;
     }
     
     return value;
 }
 
-static void fill_object_from_bson(id object, bson_iterator* it) {
+static void fill_object_from_bson_ext(id object, NSMutableArray* keys, bson_iterator* it) {
     if([object isKindOfClass: [NSDictionary class]]) {
+        [keys removeAllObjects];
+        
         while(bson_iterator_next(it)) {
             NSString* key = [NSString stringWithCString: bson_iterator_key(it) encoding: NSUTF8StringEncoding];
+            [keys addObject: key];
+            
             id val = object_from_bson(it);
             [object setObject: val forKey: key];
         }
@@ -328,6 +280,87 @@ static void fill_object_from_bson(id object, bson_iterator* it) {
         @throw [NSException exceptionWithName: @"CRASH" reason: @"Attempt to deserialize BSON into unhandled object type" userInfo: [NSDictionary dictionaryWithObject: object forKey: @"object"]];
     }
 }
+
+static void fill_object_from_bson(id object, bson_iterator* it) {
+    fill_object_from_bson_ext(object, nil, it);
+}
+
+#pragma mark -
+#pragma mark client code
+
+@implementation MongoDBClient {
+    mongo conn;
+}
+
+#pragma mark -
+#pragma mark Initialization and destruction
+
+static void build_error(mongo* conn, NSError** error) {
+    if(error) {
+        switch ( conn->err ) {
+            case MONGO_CONN_NO_SOCKET:
+                *error = [NSError errorWithDomain: @"No socket" code: conn->err userInfo: nil];
+                break;
+            case MONGO_CONN_FAIL:
+                *error = [NSError errorWithDomain: @"Connection failed" code: conn->err userInfo: nil];
+                break;
+            case MONGO_CONN_ADDR_FAIL:
+                *error = [NSError errorWithDomain: @"Could not resolve host name" code: conn->err userInfo: nil];
+                break;
+            case MONGO_CONN_NOT_MASTER:
+                *error = [NSError errorWithDomain: @"Database is not a master" code: conn->err userInfo: nil];
+                break;
+            default:
+                *error = [NSError errorWithDomain: [NSString stringWithCString: conn->lasterrstr encoding: NSUTF8StringEncoding] code: conn->err userInfo: nil];
+        }
+    }
+    
+    mongo_clear_errors(conn);
+}
+                  
++ (MongoDBClient*) newWithHost:(NSString*)host port:(NSUInteger)port andError:(NSError**)error {
+    return [[MongoDBClient alloc] initWithHost: host port: port andError: error];
+}
+
+- (id) initWithHost:(NSString*)host port:(NSUInteger)port andError:(NSError**)error {
+    self = [super init];
+    if(self) {
+        int status;
+        
+        mongo_init(&conn);
+        
+        status = mongo_client(&conn, [host cStringUsingEncoding: NSUTF8StringEncoding], (int)port);
+        if(status != MONGO_OK) {
+            build_error(&conn, error);
+            
+            return nil;
+        }
+        
+        self.database = @"test";
+    }
+    return self;
+}
+
+- (void)dealloc
+{
+    mongo_destroy(&conn);
+}
+
+#pragma mark -
+#pragma mark Query Stuff
+
++ (NSDictionary*)buildQuery:(id)query {
+    if(query == nil ) {
+        return [NSDictionary dictionary];
+    } else if([query isKindOfClass: [MongoObjectId class]]) {
+        return [NSDictionary dictionaryWithObject: query forKey: @"_id"];
+    } else if([query isKindOfClass: [NSDictionary class]]) {
+        return query;
+    }
+    
+    @throw [NSException exceptionWithName: @"CRASH" reason: @"Illegal query object type" userInfo: [NSDictionary dictionaryWithObject: query forKey: @"query"]];
+}
+
 
 #pragma mark -
 #pragma mark Database commands
@@ -341,22 +374,6 @@ static void fill_object_from_bson(id object, bson_iterator* it) {
     
     build_error(&conn, error);
     return NO;
-}
-
-
-#pragma mark -
-#pragma mark Query Stuff
-
-- (NSDictionary*)buildQuery:(id)query {
-    if(query == nil ) {
-        return [NSDictionary dictionary];
-    } else if([query isKindOfClass: [MongoObjectId class]]) {
-        return [NSDictionary dictionaryWithObject: query forKey: @"_id"];
-    } else if([query isKindOfClass: [NSDictionary class]]) {
-        return query;
-    }
-    
-    @throw [NSException exceptionWithName: @"CRASH" reason: @"Illegal query object type" userInfo: [NSDictionary dictionaryWithObject: query forKey: @"query"]];
 }
 
 #pragma mark -
@@ -380,54 +397,30 @@ static void fill_object_from_bson(id object, bson_iterator* it) {
     return [self find: query columns: nil skip: 0 returningNoMoreThan: 0 fromCollection: collection withError: error];
 }
 
-- (NSArray*) find:(id) query columns: (NSDictionary*) columns skip:(int)toSkip returningNoMoreThan:(int)limit fromCollection:(NSString*)collection withError:(NSError**)error {
-    NSDictionary* to_find = [self buildQuery: query];
-    NSMutableArray* result = [NSMutableArray new];
+- (NSArray*) find:(id) query columns: (NSDictionary*) columns skip:(NSInteger)toSkip returningNoMoreThan:(NSInteger)limit fromCollection:(NSString*)collection withError:(NSError**)error {
     
-    
-    bson mongo_query;
-    bson mongo_columns;
-    bsonFromDictionary(&mongo_query, to_find);
-    mongo_cursor cursor;
-    mongo_cursor_init(&cursor, &conn, [[NSString stringWithFormat: @"%@.%@", self.database, collection] cStringUsingEncoding: NSUTF8StringEncoding]);
-    if(columns) {
-        bsonFromDictionary(&mongo_columns, columns);
-        mongo_cursor_set_fields(&cursor, &mongo_columns);
-    }
-    if(toSkip>0) {
-        mongo_cursor_set_skip(&cursor, toSkip);
-    }
-    if(limit>0) {
-        mongo_cursor_set_limit(&cursor, limit);
-    }
-    mongo_cursor_set_query(&cursor, &mongo_query);
-    
-    while( mongo_cursor_next( &cursor ) == MONGO_OK ) {
-        NSMutableDictionary* row = [NSMutableDictionary new];
-        bson_iterator it;
-        bson_iterator_init(&it, &cursor.current);
-        fill_object_from_bson(row, &it);
-        
-        [result addObject: row];
+    MongoDbCursor* cursor = [self cursorWithFind: query columns: columns skip: toSkip returningNoMoreThan: limit fromCollection: collection withError: error];
+    if(cursor) {
+        NSMutableArray* result = [NSMutableArray new];
+
+        while(YES) {
+            NSMutableDictionary* doc = [NSMutableDictionary new];
+            if([cursor nextDocumentIntoDictionary: doc withKeys: nil andError: error]) {
+                [result addObject: doc];
+            } else {
+                break;
+            }
+        }
     }
     
-    if(cursor.err != MONGO_OK) {
-        build_error(&conn, error);
-        result = nil;
-    }
-    bson_destroy(&mongo_query);
-    if(columns) {
-        bson_destroy(&mongo_columns);
-    }
-    
-    return result;
+    return nil;
 }
 
 
 - (BOOL) update:(id) query flag:(int)flag withOperation:(NSDictionary*)operation inCollection:(NSString*)collection andError:(NSError**)error {
     bson mongo_query;
     bson mongo_op;
-    NSDictionary* to_update = [self buildQuery: query];
+    NSDictionary* to_update = [MongoDBClient buildQuery: query];
 
     bsonFromDictionary(&mongo_query, to_update);
     bsonFromDictionary(&mongo_op, operation);
@@ -458,7 +451,7 @@ static void fill_object_from_bson(id object, bson_iterator* it) {
 }
 
 - (BOOL) remove:(id)query fromCollection:(NSString*)collection withError:(NSError**)error {
-    NSDictionary* to_remove = [self buildQuery: query];
+    NSDictionary* to_remove = [MongoDBClient buildQuery: query];
     bson mongo_query;
     
     bsonFromDictionary(&mongo_query, to_remove);
@@ -475,7 +468,7 @@ static void fill_object_from_bson(id object, bson_iterator* it) {
 
 - (NSUInteger) count:(id)query inCollection:(NSString*)collection withError:(NSError**)error {
     bson mongo_query;
-    NSDictionary* to_count = [self buildQuery: query];
+    NSDictionary* to_count = [MongoDBClient buildQuery: query];
     
     bsonFromDictionary(&mongo_query, to_count);
     
@@ -486,6 +479,85 @@ static void fill_object_from_bson(id object, bson_iterator* it) {
     }
     
     return result;
+}
+
+#pragma mark -
+#pragma mark Cursor creation methods
+
+- (MongoDbCursor*) cursorWithFind:(id) query columns: (NSDictionary*) columns skip:(NSInteger)toSkip returningNoMoreThan:(NSInteger)limit fromCollection:(NSString*)collection withError:(NSError**)error {
+    return [[MongoDbCursor alloc] initWithClient:self query: query columns: columns skip: toSkip returningNoMoreThan:limit fromCollection: collection withError: error];
+}
+
+
+#pragma mark -
+#pragma mark Private methods
+
+- (mongo*) mongoConnection {
+    return &conn;
+}
+
+@end
+
+
+@implementation MongoDbCursor {
+    bson mongo_query;
+    BOOL had_columns;
+    bson mongo_columns;
+    mongo_cursor cursor;
+    mongo* conn;
+}
+
+- (id) initWithClient:(MongoDBClient*)client query:(id) query columns: (NSDictionary*) columns skip:(NSInteger)toSkip returningNoMoreThan:(NSInteger)limit fromCollection:(NSString*)collection withError:(NSError**)error {
+
+    self = [super init];
+    
+    if(self) {
+        NSDictionary* to_find = [MongoDBClient buildQuery: query];
+        conn = [client mongoConnection];
+        bsonFromDictionary(&mongo_query, to_find);
+        mongo_cursor_init(&cursor, conn, [[NSString stringWithFormat: @"%@.%@", client.database, collection] cStringUsingEncoding: NSUTF8StringEncoding]);
+        if(columns) {
+            bsonFromDictionary(&mongo_columns, columns);
+            mongo_cursor_set_fields(&cursor, &mongo_columns);
+            had_columns = YES;
+        } else {
+            had_columns = NO;
+        }
+        if(toSkip>0) {
+            mongo_cursor_set_skip(&cursor, (int)toSkip);
+        }
+        if(limit>0) {
+            mongo_cursor_set_limit(&cursor, (int)limit);
+        }
+        mongo_cursor_set_query(&cursor, &mongo_query);
+    }
+    
+    return self;
+}
+
+- (void)dealloc
+{
+    bson_destroy(&mongo_query);
+    if(had_columns) {
+        bson_destroy(&mongo_columns);
+    }
+}
+
+- (BOOL) nextDocumentIntoDictionary:(NSMutableDictionary*)doc withKeys:(NSMutableArray*)keys andError:(NSError**)error {
+    if( mongo_cursor_next( &cursor ) == MONGO_OK ) {
+        bson_iterator it;
+        
+        [doc removeAllObjects];
+        [keys removeAllObjects];
+        
+        bson_iterator_init(&it, &cursor.current);
+        fill_object_from_bson_ext(doc, keys, &it);
+        
+        return YES;
+    }
+    
+    build_error(conn, error);
+    return NO;
 }
 
 @end
