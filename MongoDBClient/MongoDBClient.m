@@ -195,8 +195,9 @@ static id object_from_bson(bson_iterator* it) {
     bson_timestamp_t timestamp;
     const char* pattern;
     const char* options;
+    bson_type type = bson_iterator_type(it);
     
-    switch(bson_iterator_type(it)) {
+    switch(type) {
         case BSON_EOO:
             value = [NSError errorWithDomain: @"Unhandled object type: EOO" code: 0 userInfo: nil];
             break;
@@ -266,6 +267,7 @@ static id object_from_bson(bson_iterator* it) {
             value = [NSNumber numberWithLong: bson_iterator_long(it)];
             break;
         default:
+            value = [NSError errorWithDomain: @"Unhandled value type" code: type userInfo: nil];
             break;
     }
     
