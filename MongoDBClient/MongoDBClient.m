@@ -42,6 +42,13 @@
     return self;
 }
 
+- (id)copyWithZone:(NSZone*) zone {
+    MongoObjectId* result = [[self class] allocWithZone:zone];
+    memcpy(&result->value, &value, sizeof(bson_oid_t));
+    
+    return result;
+}
+
 - (NSString*) description {
     char buffer[25];
     bson_oid_to_string(&value, buffer);
