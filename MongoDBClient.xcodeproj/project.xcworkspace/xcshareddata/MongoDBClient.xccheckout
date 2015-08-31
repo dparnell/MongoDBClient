@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>6A7055D9-0A97-40F8-9291-DEF315EE5D18</string>
+	<key>IDESourceControlProjectName</key>
+	<string>MongoDBClient</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>1DA6F465190E8BBAE33BE55B0E0057E0CCE4BE9D</key>
+		<string>space.local:querything3.git</string>
+		<key>AEDCD0FD100B66A7297DFC3B4A9C5483DC25427C</key>
+		<string>github.com:dparnell/MongoDBClient.git</string>
+		<key>E4979B9473491AD87693503D5E8FB0A53DD3ACC9</key>
+		<string>github.com:dparnell/mongo-c-driver.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>MongoDBClient.xcodeproj</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>1DA6F465190E8BBAE33BE55B0E0057E0CCE4BE9D</key>
+		<string>../../../..</string>
+		<key>AEDCD0FD100B66A7297DFC3B4A9C5483DC25427C</key>
+		<string>../..</string>
+		<key>E4979B9473491AD87693503D5E8FB0A53DD3ACC9</key>
+		<string>../..mongo-c-driver/</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>github.com:dparnell/MongoDBClient.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>111</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>AEDCD0FD100B66A7297DFC3B4A9C5483DC25427C</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>1DA6F465190E8BBAE33BE55B0E0057E0CCE4BE9D</string>
+			<key>IDESourceControlWCCName</key>
+			<string>..</string>
+		</dict>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>E4979B9473491AD87693503D5E8FB0A53DD3ACC9</string>
+			<key>IDESourceControlWCCName</key>
+			<string>mongo-c-driver</string>
+		</dict>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>AEDCD0FD100B66A7297DFC3B4A9C5483DC25427C</string>
+			<key>IDESourceControlWCCName</key>
+			<string>MongoDBClient</string>
+		</dict>
+	</array>
+</dict>
+</plist>

@@ -18,7 +18,6 @@
 		65FC3A90167D4DC600DC9316 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 65FC3A8F167D4DC600DC9316 /* Cocoa.framework */; };
 		65FC3A9A167D4DC600DC9316 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 65FC3A98167D4DC600DC9316 /* InfoPlist.strings */; };
 		65FC3A9E167D4DC600DC9316 /* MongoDBClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 65FC3A9D167D4DC600DC9316 /* MongoDBClient.m */; };
-		65FC3AA6167D4DC600DC9316 /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 65FC3AA5167D4DC600DC9316 /* SenTestingKit.framework */; };
 		65FC3AA7167D4DC600DC9316 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 65FC3A8F167D4DC600DC9316 /* Cocoa.framework */; };
 		65FC3AAA167D4DC600DC9316 /* MongoDBClient.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 65FC3A8C167D4DC600DC9316 /* MongoDBClient.framework */; };
 		65FC3AB0167D4DC600DC9316 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 65FC3AAE167D4DC600DC9316 /* InfoPlist.strings */; };
@@ -58,8 +57,7 @@
 		65FC3A9B167D4DC600DC9316 /* MongoDBClient-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "MongoDBClient-Prefix.pch"; sourceTree = "<group>"; };
 		65FC3A9C167D4DC600DC9316 /* MongoDBClient.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MongoDBClient.h; sourceTree = "<group>"; };
 		65FC3A9D167D4DC600DC9316 /* MongoDBClient.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MongoDBClient.m; sourceTree = "<group>"; };
-		65FC3AA4167D4DC600DC9316 /* MongoDBClientTests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MongoDBClientTests.octest; sourceTree = BUILT_PRODUCTS_DIR; };
-		65FC3AA5167D4DC600DC9316 /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
+		65FC3AA4167D4DC600DC9316 /* MongoDBClientTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MongoDBClientTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		65FC3AAD167D4DC600DC9316 /* MongoDBClientTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "MongoDBClientTests-Info.plist"; sourceTree = "<group>"; };
 		65FC3AAF167D4DC600DC9316 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		65FC3AB1167D4DC600DC9316 /* MongoDBClientTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MongoDBClientTests.h; sourceTree = "<group>"; };
@@ -97,7 +95,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				65FC3AA6167D4DC600DC9316 /* SenTestingKit.framework in Frameworks */,
 				65FC3AA7167D4DC600DC9316 /* Cocoa.framework in Frameworks */,
 				65FC3AAA167D4DC600DC9316 /* MongoDBClient.framework in Frameworks */,
 			);
@@ -138,7 +135,7 @@
 			isa = PBXGroup;
 			children = (
 				65FC3A8C167D4DC600DC9316 /* MongoDBClient.framework */,
-				65FC3AA4167D4DC600DC9316 /* MongoDBClientTests.octest */,
+				65FC3AA4167D4DC600DC9316 /* MongoDBClientTests.xctest */,
 				654CD599168EB70600AACCD8 /* libMongoDBStaticClient.a */,
 			);
 			name = Products;
@@ -148,7 +145,6 @@
 			isa = PBXGroup;
 			children = (
 				65FC3A8F167D4DC600DC9316 /* Cocoa.framework */,
-				65FC3AA5167D4DC600DC9316 /* SenTestingKit.framework */,
 				65FC3A91167D4DC600DC9316 /* Other Frameworks */,
 			);
 			name = Frameworks;
@@ -286,7 +282,6 @@
 				65FC3A9F167D4DC600DC9316 /* Sources */,
 				65FC3AA0167D4DC600DC9316 /* Frameworks */,
 				65FC3AA1167D4DC600DC9316 /* Resources */,
-				65FC3AA2167D4DC600DC9316 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -295,8 +290,8 @@
 			);
 			name = MongoDBClientTests;
 			productName = MongoDBClientTests;
-			productReference = 65FC3AA4167D4DC600DC9316 /* MongoDBClientTests.octest */;
-			productType = "com.apple.product-type.bundle.ocunit-test";
+			productReference = 65FC3AA4167D4DC600DC9316 /* MongoDBClientTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
 
@@ -345,22 +340,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
-
-/* Begin PBXShellScriptBuildPhase section */
-		65FC3AA2167D4DC600DC9316 /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "# Run the unit tests in this test bundle.\n\"${SYSTEM_DEVELOPER_DIR}/Tools/RunUnitTests\"\n";
-		};
-/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		654CD595168EB70600AACCD8 /* Sources */ = {
@@ -538,12 +517,14 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = "\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"";
+				FRAMEWORK_SEARCH_PATHS = (
+					"\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"",
+					"$(inherited)",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "MongoDBClient/MongoDBClient-Prefix.pch";
 				INFOPLIST_FILE = "MongoDBClientTests/MongoDBClientTests-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				WRAPPER_EXTENSION = octest;
 			};
 			name = Debug;
 		};
@@ -551,12 +532,14 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = "\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"";
+				FRAMEWORK_SEARCH_PATHS = (
+					"\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"",
+					"$(inherited)",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "MongoDBClient/MongoDBClient-Prefix.pch";
 				INFOPLIST_FILE = "MongoDBClientTests/MongoDBClientTests-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				WRAPPER_EXTENSION = octest;
 			};
 			name = Release;
 		};

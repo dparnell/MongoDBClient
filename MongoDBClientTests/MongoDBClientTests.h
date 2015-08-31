@@ -6,8 +6,8 @@
 //  Copyright (c) 2012 Automagic Software Pty Ltd. All rights reserved.
 //
 
-#import <SenTestingKit/SenTestingKit.h>
+#import <XCTest/XCTest.h>
 
-@interface MongoDBClientTests : SenTestCase
+@interface MongoDBClientTests : XCTestCase
 
 @end
