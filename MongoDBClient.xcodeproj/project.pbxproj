@@ -300,7 +300,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastTestingUpgradeCheck = 0610;
-				LastUpgradeCheck = 0500;
+				LastUpgradeCheck = 0700;
 				ORGANIZATIONNAME = "Automagic Software Pty Ltd";
 			};
 			buildConfigurationList = 65FC3A85167D4DC600DC9316 /* Build configuration list for PBXProject "MongoDBClient" */;
@@ -440,6 +440,7 @@
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
@@ -492,6 +493,7 @@
 				GCC_PREFIX_HEADER = "MongoDBClient/MongoDBClient-Prefix.pch";
 				INFOPLIST_FILE = "MongoDBClient/MongoDBClient-Info.plist";
 				INSTALL_PATH = "@executable_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.automagicsoftware.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = framework;
 			};
@@ -508,6 +510,7 @@
 				GCC_PREFIX_HEADER = "MongoDBClient/MongoDBClient-Prefix.pch";
 				INFOPLIST_FILE = "MongoDBClient/MongoDBClient-Info.plist";
 				INSTALL_PATH = "@executable_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.automagicsoftware.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = framework;
 			};
@@ -524,6 +527,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "MongoDBClient/MongoDBClient-Prefix.pch";
 				INFOPLIST_FILE = "MongoDBClientTests/MongoDBClientTests-Info.plist";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.automagicsoftware.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -539,6 +543,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "MongoDBClient/MongoDBClient-Prefix.pch";
 				INFOPLIST_FILE = "MongoDBClientTests/MongoDBClientTests-Info.plist";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.automagicsoftware.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
